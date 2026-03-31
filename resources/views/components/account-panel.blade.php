@@ -77,6 +77,12 @@
                 Thông tin tài khoản
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('sach.index')}}">
+                Quản lý sách
+              </a>
+            </li>
+
           </ul>
         </div>
       </nav>
