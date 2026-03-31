@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LayOutController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\BookController;
+
 Route::get('/baoyen', function () {
     return 'Bảo Yến'; 
 });
@@ -54,9 +56,9 @@ Route::get('/sach/theloai/{id}', [LayOutController::class, 'theloai']);
 // 3. Trang xem chi tiết 
 Route::get('/sach/chitiet/{id}', [LayOutController::class, 'chitiet']);
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -68,4 +70,38 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// 1. Đặt trang chủ mặc định là trang Sách
+Route::get('/', [App\Http\Controllers\LayOutController::class, 'sach']);
+
+// 2. Route hiển thị trang cập nhật thông tin (Yêu cầu đăng nhập)
+Route::get('/accountpanel','App\Http\Controllers\AccountController@accountpanel')
+    ->middleware('auth')->name("account");
+
+// 3. Route xử lý lưu thông tin cá nhân
+Route::post('/saveaccountinfo', 'App\Http\Controllers\AccountController@saveaccountinfo')
+    ->middleware('auth')->name('saveinfo');
+
 require __DIR__.'/auth.php';
+Route::get('/order','App\Http\Controllers\LayOutController@order')->name('order');
+Route::post('/cart/add','App\Http\Controllers\LayOutController@cartadd')->name('cartadd');
+Route::post('/cart/delete','App\Http\Controllers\LayOutController@cartdelete')->name('cartdelete');
+Route::post('/order/create','App\Http\Controllers\LayOutController@ordercreate') ->middleware('auth')->name('ordercreate');
+
+
+Route::get('/accountpanel','App\Http\Controllers\AccountController@accountpanel')->middleware('auth')->name("account");
+
+Route::post('/bookview', 'App\Http\Controllers\LayOutController@bookview')->name("bookview");
+Route::post('/cart/add', 'App\Http\Controllers\LayOutController@cartadd')->name('cartadd');
+// Trang danh sách sách (index)
+Route::get('/danh-muc-sach', [BookController::class, 'index'])->name('sach.index');
+
+// Nhóm Route Thêm mới
+Route::get('/them-moi-sach', [BookController::class, 'create'])->name('sach.create');
+Route::post('/them-moi-sach', [BookController::class, 'store'])->name('sach.store');
+
+// Nhóm Route Sửa sách (Cần truyền {id} để biết sửa cuốn nào)
+Route::get('/sua-sach/{id}', [BookController::class, 'edit'])->name('sach.edit');
+Route::post('/sua-sach/{id}', [BookController::class, 'update'])->name('sach.update');
+
+// Route Xóa sách
+Route::get('/xoa-sach/{id}', [BookController::class, 'destroy'])->name('sach.destroy');
