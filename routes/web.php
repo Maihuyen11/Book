@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LayOutController;
+use App\Http\Controllers\BookController;
 
 Route::get('/baoyen', function () {
     return 'Bảo Yến'; 
@@ -69,3 +70,17 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Trang danh sách sách (index)
+Route::get('/danh-muc-sach', [BookController::class, 'index'])->name('sach.index');
+
+// Nhóm Route Thêm mới
+Route::get('/them-moi-sach', [BookController::class, 'create'])->name('sach.create');
+Route::post('/them-moi-sach', [BookController::class, 'store'])->name('sach.store');
+
+// Nhóm Route Sửa sách (Cần truyền {id} để biết sửa cuốn nào)
+Route::get('/sua-sach/{id}', [BookController::class, 'edit'])->name('sach.edit');
+Route::post('/sua-sach/{id}', [BookController::class, 'update'])->name('sach.update');
+
+// Route Xóa sách
+Route::get('/xoa-sach/{id}', [BookController::class, 'destroy'])->name('sach.destroy');
