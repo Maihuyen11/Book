@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-4">
-            <img src="{{ asset('image/'.$sach->file_anh_bia) }}" width="100%" class="img-thumbnail">
+            <img src="{{ asset('hinh/image/'.$sach->file_anh_bia) }}" width="100%" class="img-thumbnail">
         </div>
         <div class="col-8">
             <h2 class="text-danger">{{ $sach->tieu_de }}</h2>
