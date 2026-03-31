@@ -82,6 +82,8 @@ Route::post('/saveaccountinfo', 'App\Http\Controllers\AccountController@saveacco
 
 require __DIR__.'/auth.php';
 
+Route::post('/bookview', 'App\Http\Controllers\LayOutController@bookview')->name("bookview");
+Route::post('/cart/add', 'App\Http\Controllers\LayOutController@cartadd')->name('cartadd');
 // Trang danh sách sách (index)
 Route::get('/danh-muc-sach', [BookController::class, 'index'])->name('sach.index');
 
