@@ -54,9 +54,9 @@ Route::get('/sach/theloai/{id}', [LayOutController::class, 'theloai']);
 // 3. Trang xem chi tiết 
 Route::get('/sach/chitiet/{id}', [LayOutController::class, 'chitiet']);
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -67,5 +67,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// 1. Đặt trang chủ mặc định là trang Sách
+Route::get('/', [App\Http\Controllers\LayOutController::class, 'sach']);
+
+// 2. Route hiển thị trang cập nhật thông tin (Yêu cầu đăng nhập)
+Route::get('/accountpanel','App\Http\Controllers\AccountController@accountpanel')
+    ->middleware('auth')->name("account");
+
+// 3. Route xử lý lưu thông tin cá nhân
+Route::post('/saveaccountinfo', 'App\Http\Controllers\AccountController@saveaccountinfo')
+    ->middleware('auth')->name('saveinfo');
 
 require __DIR__.'/auth.php';
