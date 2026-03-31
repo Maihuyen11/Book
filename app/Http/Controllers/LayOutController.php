@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\TestSendEmail;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User; 
 
 class LayOutController extends Controller {
@@ -70,41 +71,77 @@ $data = DB::table("sach")->whereRaw("id in (".$list_book.")")->get();
     return view("sach.order",compact("data","quantity"));
 }
   
-    public function ordercreate(Request $request)
+   public function ordercreate(Request $request)
 {
-        $request->validate([
-        "hinh_thuc_thanh_toan"=>["required","numeric"]
+    // Bước 1: Kiểm tra dữ liệu đầu vào (Của Mai Huyền)
+    $request->validate([
+        "hinh_thuc_thanh_toan" => ["required", "numeric"]
     ]);
-        $data = [];
-        $quantity = [];
-        if(session()->has('cart'))
-    {
-        $order = ["ngay_dat_hang"=>DB::raw("now()"),"tinh_trang"=>1,
-        "hinh_thuc_thanh_toan"=>$request->hinh_thuc_thanh_toan,
-        "user_id"=>Auth::user()->id];
-        DB::transaction(function () use ($order) {
-        $id_don_hang = DB::table("don_hang")->insertGetId($order);
-        $cart = session("cart");
-        $list_book = "";
-        $quantity = [];
-        foreach($cart as $id=>$value)
-    {
-        $quantity[$id] = $value;
-        $list_book .=$id.", ";
+
+    $data = [];
+    $quantity = [];
+
+    if (session()->has('cart')) {
+        // Chuẩn bị dữ liệu đơn hàng (Của Mai Huyền)
+        $order = [
+            "ngay_dat_hang" => DB::raw("now()"),
+            "tinh_trang" => 1,
+            "hinh_thuc_thanh_toan" => $request->hinh_thuc_thanh_toan,
+            "user_id" => Auth::user()->id
+        ];
+
+        // Thực hiện lưu vào Database (Của Mai Huyền)
+        // Lưu ý: Thêm & trước $data và $quantity để biến này có giá trị sau khi chạy transaction
+        DB::transaction(function () use ($order, &$data, &$quantity) {
+            $id_don_hang = DB::table("don_hang")->insertGetId($order);
+            $cart = session("cart");
+            $list_book = "";
+            $quantity = [];
+            
+            foreach ($cart as $id => $value) {
+                $quantity[$id] = $value;
+                $list_book .= $id . ", ";
+            }
+            
+            $list_book = substr($list_book, 0, strlen($list_book) - 2);
+            $data = DB::table("sach")->whereRaw("id in (" . $list_book . ")")->get();
+            foreach ($data as $row) {
+                $row->so_luong = $quantity[$row->id]; 
+}
+            $detail = [];
+            foreach ($data as $row) {
+                $detail[] = [
+                    "ma_don_hang" => $id_don_hang,
+                    "sach_id" => $row->id,
+                    "so_luong" => $quantity[$row->id],
+                    "don_gia" => $row->gia_ban
+                ];
+            }
+            
+            DB::table("chi_tiet_don_hang")->insert($detail);
+    session()->forget('cart');
+            // --- ĐÂY LÀ PHẦN TÍCH HỢP CỦA BÍCH HỢP (CÂU 6B) ---
+            // 1. Lấy thông tin người dùng đang đăng nhập
+            $user = Auth::user(); 
+            
+            // 2. Gửi email thông báo đơn hàng thành công
+            // Truyền biến $data (danh sách sách) vào thông báo
+
+ $donHang = DB::select("select * from chi_tiet_don_hang c, sach s
+ where c.sach_id = s.id
+ and c.ma_don_hang = ?", [$id_don_hang]);
+            if ($user) {
+                $user->notify(new TestSendEmail($donHang));
+            }
+            // ------------------------------------------------
+
+            // Xóa giỏ hàng (Của Mai Huyền)
+            session()->forget('cart');
+        });
     }
-        $list_book = substr($list_book, 0,strlen($list_book)-2);
-        $data = DB::table("sach")->whereRaw("id in (".$list_book.")")->get();
-        $detail = [];
-        foreach($data as $row)
-    {
-        $detail[] = ["ma_don_hang"=>$id_don_hang,"sach_id"=>$row->id,
-        "so_luong"=>$quantity[$row->id],"don_gia"=>$row->gia_ban]; 
-    }
-        DB::table("chi_tiet_don_hang")->insert($detail);
-        session()->forget('cart');
-    });
-    }
-        return view("sach.order", compact('data','quantity'));
+
+    // Trả về view hiển thị thông báo đặt hàng thành công
+    return view("sach.order", compact('data', 'quantity'));
 }
 public function cartdelete(Request $request)
 {

@@ -74,3 +74,5 @@ Route::post('/cart/add','App\Http\Controllers\LayOutController@cartadd')->name('
 Route::post('/cart/delete','App\Http\Controllers\LayOutController@cartdelete')->name('cartdelete');
 Route::post('/order/create','App\Http\Controllers\LayOutController@ordercreate') ->middleware('auth')->name('ordercreate');
 
+
+Route::get('/accountpanel','App\Http\Controllers\AccountController@accountpanel')->middleware('auth')->name("account");

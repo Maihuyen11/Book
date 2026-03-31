@@ -1,39 +1,51 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        table, th, td { border: 1px solid black; }
-        th, td { padding: 10px; text-align: center; }
-        th { background-color: #f2f2f2; color: #800080; }
-        .title { color: #0066cc; font-weight: bold; text-align: center; }
-    </style>
-</head>
-<body>
-    <p class="title">THÔNG TIN ĐƠN HÀNG</p>
-    <table>
+    <head>
+        <style>
+            .book-table
+            {
+                border-collapse:collapse;
+            }
+            .book-table tr th
+            {
+                text-align:center;
+            }
+            .book-table tr th, .book-table tr td
+            {
+                border:1px solid #000;
+                padding:3px;
+            }
+        </style>
+    </head>
+    <body>
+    <div style='text-align:center;font-weight:bold;color:#15c;'>
+        THÔNG TIN ĐƠN HÀNG
+    </div>
+
+    <table class='book-table' style='margin:0 auto; width:70%'>
         <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên sách</th>
-                <th>Số lượng</th>
-                <th>Đơn giá</th>
-            </tr>
+            <th>STT</th>
+            <th>Tên sách</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
         </thead>
         <tbody>
-            @php $total = 0; @endphp
-            @foreach($data as $index => $row)
+            @php
+                $tongTien = 0;
+            @endphp
+            @foreach($data as $key=>$row)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $row->tieu_de }}</td>
-                    <td>{{ $row->so_luong }}</td>
-                    <td>{{ number_format($row->don_gia, 0, ',', '.') }}đ</td>
+                    <td align='center'>{{$key+1}}</td>
+                    <td>{{$row->tieu_de}}</td>
+                    <td align='center'>{{$row->so_luong}}</td>
+                    <td align='center'>{{number_format($row->gia_ban,0,',','.')}}đ</td>
                 </tr>
-                @php $total += $row->so_luong * $row->don_gia; @endphp
+                @php
+                    $tongTien +=$row->so_luong*$row->gia_ban;
+                @endphp
             @endforeach
             <tr>
-                <td colspan="3"><strong>Tổng cộng</strong></td>
-                <td><strong>{{ number_format($total, 0, ',', '.') }}đ</strong></td>
+                <td colspan='3' align='center'><b>Tổng cộng</b></td>
+                <td align='center'><b>{{number_format($tongTien,0,',','.')}}đ</b></td>
             </tr>
         </tbody>
     </table>
