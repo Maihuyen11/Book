@@ -69,3 +69,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::post('/bookview', 'App\Http\Controllers\LayOutController@bookview')->name("bookview");
+Route::post('/cart/add', 'App\Http\Controllers\LayOutController@cartadd')->name('cartadd');

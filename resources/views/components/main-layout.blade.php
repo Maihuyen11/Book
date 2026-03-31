@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <title>{{ $title ?? 'Nhà Sách Phương Nam' }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .navbar { background-color: #ff5850; font-weight: bold; }
         .nav-item a { color: #fff !important; }
         .navbar-nav { margin: 0 auto; }
-        .list-book { display: grid; grid-template-columns: repeat(4, 24%); }
-        .book { margin: 10px; text-align: center; }
-        .list-book {
-    display: grid;
-    grid-template-columns: repeat(4, 24%); /* Chia 4 cột [cite: 152] */
-}
-.book {
-    margin: 10px;
-    text-align: center; /* Căn giữa nội dung sách [cite: 156, 157] */
-}
+        
+        /* Cập nhật CSS hiển thị danh sách sách theo tài liệu */
+        .list-book { 
+            display: grid; 
+            grid-template-columns: repeat(4, 24%); 
+        }
+        .book { 
+            position: relative;
+            margin: 10px; 
+            text-align: center; 
+            padding-bottom: 35px;
+        }
+        .btn-add-product {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -31,16 +39,16 @@
                 <nav class="navbar navbar-light">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ url('sach') }}">Trang chủ</a>
+                            <a class="nav-link menu-the-loai" href="{{ url('sach') }}" the_loai="">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('sach/theloai/1') }}">Tiểu thuyết </a>
+                            <a class="nav-link menu-the-loai" href="{{ url('sach') }}" the_loai="1">Tiểu thuyết</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('sach/theloai/2') }}">Truyện ngắn-tản văn </a>
+                            <a class="nav-link menu-the-loai" href="{{ url('sach') }}" the_loai="2">Truyện ngắn tản văn</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('sach/theloai/3') }}">Tác phẩm kinh điển </a>
+                            <a class="nav-link menu-the-loai" href="{{ url('sach') }}" the_loai="3">Tác phẩm kinh điển</a>
                         </li>
                     </ul>
                 </nav>
