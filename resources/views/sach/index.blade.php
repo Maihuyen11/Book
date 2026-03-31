@@ -29,9 +29,38 @@
                     <b>{{ $row->tieu_de }}</b><br/> 
                     <i>{{ number_format($row->gia_ban, 0, ",", ".") }}đ</i> 
                 </a>
+            <div class='btn-add-product'>
+                    <button class='btn btn-success btn-sm mb-1 add-product' book_id="{{$row->id}}">
+                    Thêm vào giỏ hàng
+                    </button> 
             </div>
+            </div>   
         @endforeach
     </div>
+    <script>
+    $(document).ready(function(){
+      $(".add-product").click(function(){
+      id = $(this).attr("book_id");
+      num = 1;
+      $.ajax({
+        type:"POST",
+        dataType:"json",
+        url: "{{route('cartadd')}}",
+        data:{"_token": "{{ csrf_token() }}","id":id,"num":num},
+        beforeSend:function(){
+        
+        },
+        success:function(data){
+          $("#cart-number-product").html(data);
+        },
+        error: function (xhr,status,error){
+        },
+        complete: function(xhr,status){
+        }
+      });
+      });
+    });
+  </script>
 
     <script>
     $(document).ready(function(){

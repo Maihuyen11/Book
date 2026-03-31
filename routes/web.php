@@ -81,6 +81,13 @@ Route::post('/saveaccountinfo', 'App\Http\Controllers\AccountController@saveacco
     ->middleware('auth')->name('saveinfo');
 
 require __DIR__.'/auth.php';
+Route::get('/order','App\Http\Controllers\LayOutController@order')->name('order');
+Route::post('/cart/add','App\Http\Controllers\LayOutController@cartadd')->name('cartadd');
+Route::post('/cart/delete','App\Http\Controllers\LayOutController@cartdelete')->name('cartdelete');
+Route::post('/order/create','App\Http\Controllers\LayOutController@ordercreate') ->middleware('auth')->name('ordercreate');
+
+
+Route::get('/accountpanel','App\Http\Controllers\AccountController@accountpanel')->middleware('auth')->name("account");
 
 Route::post('/bookview', 'App\Http\Controllers\LayOutController@bookview')->name("bookview");
 Route::post('/cart/add', 'App\Http\Controllers\LayOutController@cartadd')->name('cartadd');
