@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LayOutController;
-
+use App\Http\Controllers\TestController;
 Route::get('/baoyen', function () {
     return 'Bảo Yến'; 
 });
